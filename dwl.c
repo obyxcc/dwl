@@ -464,6 +464,7 @@ static struct wl_list mons;
 static Monitor *selmon;
 
 static struct fcft_font *font;
+static int vp, sp;
 static int bh;
 static int lrpad;
 static char stext[256];
@@ -611,8 +612,8 @@ arrangelayers(Monitor *m)
 		return;
 
 	if (m->showbar) {
-		usable_area.height -= m->b.height;
-		usable_area.y += topbar ? m->b.height : 0;
+		usable_area.height = usable_area.height - vertpad - m->b.height;
+		usable_area.y = topbar ? usable_area.y + m->b.height + vp : usable_area.y;
 	}
 
 	/* Arrange exclusive surfaces from top->bottom */
@@ -1581,8 +1582,8 @@ drawbar(Monitor *mon)
 	}
 
 	pixman_image_unref(pix);
-	wlr_scene_node_set_position(&mon->scene_buffer->node, mon->m.x,
-		mon->m.y + (topbar ? 0 : mon->m.height - mon->b.height));
+	wlr_scene_node_set_position(&mon->scene_buffer->node, mon->m.x + sp,
+		mon->m.y + vp + (topbar ? 0 : mon->m.height - mon->b.height));
 	wlr_scene_buffer_set_buffer(mon->scene_buffer, &buf->base);
 	wlr_buffer_drop(&buf->base);
 }
@@ -2885,6 +2886,8 @@ setup(void)
 
 	lrpad = font->height;
 	bh = user_bh ? user_bh : font->height + 2 + barborderpx * 2;
+	sp = sidepad;
+	vp = (topbar == 1) ? vertpad : - vertpad;
 
 	status_event_source = wl_event_loop_add_fd(wl_display_get_event_loop(dpy),
 		STDIN_FILENO, WL_EVENT_READABLE, status_in, NULL);
@@ -3277,7 +3280,7 @@ updatebardims(Monitor *m)
 {
 	int rw, rh;
 	wlr_output_effective_resolution(m->wlr_output, &rw, &rh);
-	m->b.width = rw;
+	m->b.width = rw - 2 * sp;
 	m->b.height = bh;
 }
 
