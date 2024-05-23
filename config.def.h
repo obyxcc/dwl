@@ -10,6 +10,7 @@ static const int smartgaps                 = 0;  /* 1 means no outer gap when th
 static int gaps                            = 1;  /* 1 means gaps between windows are added */
 static const unsigned int gappx            = 10; /* gap pixel between windows */
 static const unsigned int borderpx         = 1;  /* border pixel of windows */
+static const unsigned int barborderpx         = 1;  /* border pixel bar */
 static const float rootcolor[]             = COLOR(0x000000ff);
 static const float bordercolor[]           = COLOR(0x444444ff);
 static const float focuscolor[]            = COLOR(0x005577ff);
@@ -23,6 +24,7 @@ static const int topbar         = 1; /* 0 means bottom bar */
 static const int user_bh        = 0; /* 0 means that dwl will calculate bar height, >= 1 means dwl will use user_bh as bar height */
 static const char *fonts[]      = {"monospace:size=10"};
 static const char *fontattrs    = "dpi=96";
+static pixman_color_t borderbar = { 0x5555, 0x7777, 0x0000, 0xffff };
 static pixman_color_t normbarfg = { 0xbbbb, 0xbbbb, 0xbbbb, 0xffff };
 static pixman_color_t normbarbg = { 0x2222, 0x2222, 0x2222, 0xffff };
 static pixman_color_t selbarfg  = { 0xeeee, 0xeeee, 0xeeee, 0xffff };
