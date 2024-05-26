@@ -8,9 +8,9 @@ static const int sloppyfocus               = 1;  /* focus follows mouse */
 static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
 static const int smartgaps                 = 0;  /* 1 means no outer gap when there is only one window */
 static int gaps                            = 1;  /* 1 means gaps between windows are added */
-static const unsigned int gappx            = 10; /* gap pixel between windows */
+static const unsigned int gappx            = 8; /* gap pixel between windows */
 static const unsigned int borderpx         = 1;  /* border pixel of windows */
-static const unsigned int barborderpx         = 1;  /* border pixel bar */
+static const unsigned int barborderpx      = 0;  /* border pixel bar */
 static const float rootcolor[]             = COLOR(0x000000ff);
 static const float bordercolor[]           = COLOR(0x444444ff);
 static const float focuscolor[]            = COLOR(0x005577ff);
@@ -21,10 +21,10 @@ static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You ca
 /* bar */
 static const int showbar        = 1; /* 0 means no bar */
 static const int topbar         = 1; /* 0 means bottom bar */
-static const int vertpad        = 10; /* vertical padding of bar */
-static const int sidepad        = 10; /* horizontal padding of bar */
-static const int user_bh        = 0; /* 0 means that dwl will calculate bar height, >= 1 means dwl will use user_bh as bar height */
-static const char *fonts[]      = {"monospace:size=10"};
+static const int vertpad        = 0; /* vertical padding of bar */
+static const int sidepad        = 0; /* horizontal padding of bar */
+static const int user_bh        = 28; /* 0 means that dwl will calculate bar height, >= 1 means dwl will use user_bh as bar height */
+static const char *fonts[]      = {"JetBrainsMono Nerd Font:style=Bold:size=10"};
 static const char *fontattrs    = "dpi=96";
 static pixman_color_t borderbar = { 0x5555, 0x7777, 0x0000, 0xffff };
 static pixman_color_t normbarfg = { 0xbbbb, 0xbbbb, 0xbbbb, 0xffff };
@@ -40,7 +40,7 @@ static int log_level = WLR_ERROR;
 
 /* Autostart */
 static const char *const autostart[] = {
-        "wbg", "/path/to/your/image", NULL,
+        "wbg", "/home/cole/Pictures/wallpapers/lavender-cat.png", NULL,
         NULL /* terminate */
 };
 
@@ -48,16 +48,22 @@ static const Rule rules[] = {
 	/* app_id     title       tags mask     isfloating   monitor scratchkey */
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
-	{ "firefox",  NULL,       1 << 8,       0,           -1,      0  },
-	{ NULL,     "scratchpad", 0,            1,           -1,     's' },
+	// { "firefox",  NULL,       1 << 8,       0,           -1,      0  },
+	{ NULL,     "spterm", 0,            1,           -1,     's' },
+	{ NULL,     "spmix", 0,            1,           -1,     'a' },
+	{ NULL,     "spmus", 0,            1,           -1,     'm' },
+	{ NULL,     "spcldr", 0,            1,           -1,     'c' },
+	{ NULL,     "sprss", 0,            1,           -1,     'r' },
+	{ NULL,     "sptop", 0,            1,           -1,     'p' },
+	{ NULL,     "spmail", 0,            1,           -1,     'e' },
 };
 
 /* layout(s) */
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+	{ "󰕰",      tile },
+	{ "󰖲",      NULL },    /* no layout function means floating behavior */
+	{ "󰝤",      monocle },
 };
 
 /* monitors */
@@ -138,7 +144,7 @@ static const InputRule inputrules[] = {
 };
 
 /* If you want to use the windows key for MODKEY, use WLR_MODIFIER_LOGO */
-#define MODKEY WLR_MODIFIER_ALT
+#define MODKEY WLR_MODIFIER_LOGO
 
 #define TAGKEYS(KEY,SKEY,TAG) \
 	{ MODKEY,                    KEY,            view,            {.ui = 1 << TAG} }, \
@@ -154,39 +160,51 @@ static const char *termcmd[] = { "foot", NULL };
 static const char *menucmd[] = { "wmenu-run", NULL };
 
 /* named scratchpads - First arg only serves to match against key in rules*/
-static const char *scratchpadcmd[] = { "s", "foot", "-T", "scratchpad", NULL };
+static const char *sptermcmd[] = {"s", "foot", "-T", "spterm", "-W", "144x41", NULL};
+static const char *sptopcmd[] = {"p", "foot", "-T", "sptop", "-W", "144x41", "-e", "htop", NULL};
+static const char *spmixcmd[] = {"a", "foot", "-T", "spmix", "-W", "144x41", "-e", "pulsemixer", NULL};
+static const char *spmuscmd[] = {"m", "foot", "-T", "spmus", "-W", "144x41", "-e", "cmus", NULL};
+static const char *spcldrcmd[] = {"c", "foot", "-T", "spcldr", "-W", "144x41", "-e", "calcurse", NULL};
+static const char *sprsscmd[] = {"r", "foot", "-T", "sprss", "-W", "144x41", "-e", "newsboat", NULL};
+static const char *spmailcmd[] = {"e", "foot", "-T", "spmail", "-W", "144x41", "-e", "aerc", NULL};
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                 function        argument */
-	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          {.v = termcmd} },
-	{ MODKEY,                    XKB_KEY_grave,      togglescratch,  {.v = scratchpadcmd } },
+	{ MODKEY,                    XKB_KEY_d,          spawn,          {.v = menucmd} },
+	{ MODKEY,                    XKB_KEY_Return,     spawn,          {.v = termcmd} },
+	{ MODKEY,                    XKB_KEY_grave,      togglescratch,  {.v = sptermcmd} },
+	{ MODKEY,                    XKB_KEY_a,		 togglescratch,  {.v = spmixcmd} },
+	{ MODKEY,                    XKB_KEY_m,		 togglescratch,  {.v = spmuscmd} },
+	{ MODKEY,                    XKB_KEY_c,		 togglescratch,  {.v = spcldrcmd} },
+	{ MODKEY,                    XKB_KEY_b,		 togglescratch,  {.v = sprsscmd} },
+	{ MODKEY,                    XKB_KEY_p,		 togglescratch,  {.v = sptopcmd} },
+	{ MODKEY,                    XKB_KEY_e,		 togglescratch,  {.v = spmailcmd} },
 	{ MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_J,          movestack,      {.i = +1} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_K,          movestack,      {.i = -1} },
-	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },
-	{ MODKEY,                    XKB_KEY_d,          incnmaster,     {.i = -1} },
-	{ MODKEY,                    XKB_KEY_h,          setmfact,       {.f = -0.05f} },
-	{ MODKEY,                    XKB_KEY_l,          setmfact,       {.f = +0.05f} },
-	{ MODKEY,                    XKB_KEY_Return,     zoom,           {0} },
+	{ MODKEY,                    XKB_KEY_plus,       incnmaster,     {.i = +1} },
+	{ MODKEY,                    XKB_KEY_minus,      incnmaster,     {.i = -1} },
+	{ MODKEY,                    XKB_KEY_comma,      setmfact,       {.f = -0.05f} },
+	{ MODKEY,                    XKB_KEY_period,     setmfact,       {.f = +0.05f} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     zoom,           {0} },
 	{ MODKEY,                    XKB_KEY_Tab,        view,           {0} },
 	{ MODKEY,                    XKB_KEY_g,          togglegaps,     {0} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_C,          killclient,     {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          killclient,     {0} },
 	{ MODKEY,                    XKB_KEY_t,          setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                    XKB_KEY_f,          setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                    XKB_KEY_m,          setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                    XKB_KEY_space,      setlayout,      {0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_space,      togglefloating, {0} },
-	{ MODKEY,                    XKB_KEY_e,         togglefullscreen, {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_f,          togglefullscreen, {0} },
 	{ MODKEY,                    XKB_KEY_0,          view,           {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright, tag,            {.ui = ~0} },
-	{ MODKEY,                    XKB_KEY_comma,      focusmon,       {.i = WLR_DIRECTION_LEFT} },
-	{ MODKEY,                    XKB_KEY_period,     focusmon,       {.i = WLR_DIRECTION_RIGHT} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_less,       tagmon,         {.i = WLR_DIRECTION_LEFT} },
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_greater,    tagmon,         {.i = WLR_DIRECTION_RIGHT} },
+	{ MODKEY,                    XKB_KEY_h,          focusmon,       {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY,                    XKB_KEY_l,          focusmon,       {.i = WLR_DIRECTION_RIGHT} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_H,		 tagmon,         {.i = WLR_DIRECTION_LEFT} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_L,		 tagmon,         {.i = WLR_DIRECTION_RIGHT} },
 	TAGKEYS(          XKB_KEY_1, XKB_KEY_exclam,                     0),
 	TAGKEYS(          XKB_KEY_2, XKB_KEY_at,                         1),
 	TAGKEYS(          XKB_KEY_3, XKB_KEY_numbersign,                 2),
@@ -196,7 +214,7 @@ static const Key keys[] = {
 	TAGKEYS(          XKB_KEY_7, XKB_KEY_ampersand,                  6),
 	TAGKEYS(          XKB_KEY_8, XKB_KEY_asterisk,                   7),
 	TAGKEYS(          XKB_KEY_9, XKB_KEY_parenleft,                  8),
-	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Q,          quit,           {0} },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Escape,          quit,           {0} },
 
 	/* Ctrl-Alt-Backspace and Ctrl-Alt-Fx used to be handled by X server */
 	{ WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_Terminate_Server, quit, {0} },
