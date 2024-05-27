@@ -74,7 +74,8 @@ static const MonitorRule monrules[] = {
 	{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, 0, 0, 0, 0, 120.000f, 1, 1},
 	*/
 	/* defaults */
-	{ NULL,       0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, 0, 0, 0, 0, 0.0f, 0 ,1},
+	{ "Sharp Corporation 0x14D1 (eDP-1)",    0.5f,  1,      1.25,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, 0, 0, 0, 0, 0.0f, 0 ,0},
+	{ NULL,       0.55f, 1,      1.25,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, 0, 0, 0, 0, 0.0f, 0 ,0},
 	// mode let's the user decide on how dwl should implement the modes:
 	// -1 Sets a custom mode following the users choice
 	// All other number's set the mode at the index n, 0 is the standard mode; see wlr-randr
@@ -140,7 +141,7 @@ static const InputRule inputrules[] = {
 	{ "SynPS/2 Synaptics TouchPad", LIBINPUT_CONFIG_SEND_EVENTS_DISABLED, LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT, 0.0 },
 	{ "TPPS/2 IBM TrackPoint", LIBINPUT_CONFIG_SEND_EVENTS_ENABLED, LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE, 0.0 },
 	*/
-	{ NULL, LIBINPUT_CONFIG_SEND_EVENTS_ENABLED, LIBINPUT_CONFIG_ACCEL_PROFILE_FLAT, 0.0 },
+	{ NULL, LIBINPUT_CONFIG_SEND_EVENTS_ENABLED, LIBINPUT_CONFIG_ACCEL_PROFILE_ADAPTIVE, 0.0 },
 };
 
 /* If you want to use the windows key for MODKEY, use WLR_MODIFIER_LOGO */
@@ -161,12 +162,12 @@ static const char *menucmd[] = { "wmenu-run", NULL };
 
 /* named scratchpads - First arg only serves to match against key in rules*/
 static const char *sptermcmd[] = {"s", "foot", "-T", "spterm", "-W", "144x41", NULL};
-static const char *sptopcmd[] = {"p", "foot", "-T", "sptop", "-W", "144x41", "-e", "htop", NULL};
-static const char *spmixcmd[] = {"a", "foot", "-T", "spmix", "-W", "144x41", "-e", "pulsemixer", NULL};
-static const char *spmuscmd[] = {"m", "foot", "-T", "spmus", "-W", "144x41", "-e", "cmus", NULL};
-static const char *spcldrcmd[] = {"c", "foot", "-T", "spcldr", "-W", "144x41", "-e", "calcurse", NULL};
-static const char *sprsscmd[] = {"r", "foot", "-T", "sprss", "-W", "144x41", "-e", "newsboat", NULL};
-static const char *spmailcmd[] = {"e", "foot", "-T", "spmail", "-W", "144x41", "-e", "aerc", NULL};
+static const char *sptopcmd[] = {"p", "foot", "-T", "sptop", "-W", "144x41", "htop", NULL};
+static const char *spmixcmd[] = {"a", "foot", "-T", "spmix", "-W", "144x41", "pulsemixer", NULL};
+static const char *spmuscmd[] = {"m", "foot", "-T", "spmus", "-W", "144x41", "cmus", NULL};
+static const char *spcldrcmd[] = {"c", "foot", "-T", "spcldr", "-W", "144x41", "calcurse", NULL};
+static const char *sprsscmd[] = {"r", "foot", "-T", "sprss", "-W", "144x41", "newsboat", NULL};
+static const char *spmailcmd[] = {"e", "foot", "-T", "spmail", "-W", "144x41", "aerc", NULL};
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
